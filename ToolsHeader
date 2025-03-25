@@ -1,0 +1,21 @@
+#ifndef TOOLS_FLAG
+#define TOOLS_FLAG 1
+#include "stdbool.h"
+typedef struct {
+	char name [35];
+	char group [10];
+	int year;
+} Student;
+
+struct Node{
+	Student* data;
+	struct Node* next;
+};
+void printList( struct Node* head);
+struct Node* Add(struct Node* head, Student* newStudent);
+bool Search(struct Node* head, char* key);
+void AddAfter(struct Node* head, Student* newStudent, char* key);
+void Delete( struct Node* head, char* key);
+void SaveAtFile(char * filename, struct Node* head);
+struct Node* ReadFromFile(struct Node* head, char * filename);
+#endif
