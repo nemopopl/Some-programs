@@ -1,0 +1,93 @@
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+#include "stdbool.h"
+#include "tools.h"
+
+
+void printList( struct Node* head){
+	int k=1;
+	printf("\n\tLinked List:\n");
+	while(head!=NULL){
+		printf("№%d %s %s %d\n",k, head->data->name, head->data->group, head->data->year);
+		head = head->next;
+		k++;
+	}
+
+};
+
+struct Node* Add(struct Node* head, Student* newStudent){
+	struct Node* newNode = (struct Node*)malloc(sizeof(struct Node*));
+	
+	newNode->data = malloc(sizeof(Student));
+	newNode->next = head;
+	
+	memcpy(newNode->data, newStudent, sizeof(Student));
+	
+	return newNode;
+};
+
+bool Search(struct Node* head, char* key){
+	while(head!=NULL){
+		if (strcmp(head->data->name, key)==0){
+			return true;
+		}
+		head  = head->next;
+	}
+	return false;
+};
+
+void AddAfter(struct Node* head, Student* newStudent, char* key){
+	while(strcmp(head->data->name, key)!=0 && head->next){
+			head = head->next;
+	}
+	head->next  = Add(head->next, newStudent);	
+};
+		
+void Delete( struct Node* head, char* key){
+	struct Node* temp;
+	if (( strcmp(head->data->name, key)==0)){
+		head = head->next;
+	}
+	else{
+		while ( strcmp(head->data->name, key)!=0){
+			temp = head;
+			head = head->next;
+		}
+		temp->next = head->next;
+	}
+};
+
+void SaveAtFile(char * filename, struct Node* head){
+	FILE * fp = fopen(filename, "w");
+	while(head!=NULL){
+		fprintf(fp, "%s %s %d\n", &(head->data->name), &(head->data->group), (head->data->year));
+		head  = head->next;
+	}	
+	fclose(fp);
+}
+struct Node*ReadFromFile(struct Node* head, char * filename){
+	//struct Node* head = NULL;
+	Student* student;
+	FILE * fp = fopen(filename, "r");
+	fseek(fp, 0, SEEK_END);
+	int size = ftell(fp);
+	rewind(fp);		
+	char key[35];
+	while(size>9){
+		fscanf(fp, "%s %s %d", &student->name, &student->group, &student->year);
+		int a = strlen(student->name);
+		int b = strlen(student->group);
+		size-=(a+b+7);
+			if (head==NULL){
+				head =  Add(head, student);
+				strcpy(key, student->name);
+			}
+			else{
+				AddAfter(head, student, key);
+				strcpy(key,student->name);
+			}
+	}
+	fclose(fp);
+	return head;
+}
